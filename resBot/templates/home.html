@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resala Bot</title>
+</head>
+<body>
+<div>
+{% if current_user.is_authenticated %}
+    Logged in
+{% endif %}
+</div>
+
+<div>
+    {{ curr_time }}
+</div>
+{% if current_user.is_authenticated %}
+    <h1>Links</h1>
+    <ul>
+        <li><a href="{{url_for('show_resala_branches')}}">Branches</a></li>
+        <li><a href="{{url_for('show_resala_activity')}}">Activities</a></li>
+        <li><a href="{{url_for('show_member_roles')}}">Member roles</a></li>
+        <li><a href="{{url_for('show_contribution_types')}}">Contribution Types</a></li>
+        <li><a href="{{url_for('show_all_bots')}}">Bots</a></li>
+    </ul>
+
+
+{% endif %}
+
+</body>
+</html>

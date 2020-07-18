@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stored Resala Committees</title>
+</head>
+<body>
+{% if activity %}
+<h1>{{activity.name}}</h1>
+<ul>
+    {% for committee in committees %}
+        <li>{{committee.name}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+swagger: "2.0"
+info:
+  description: "This is a brief description of Resala bot API, The API provides ability to add new members, new contributions and query contributions of a membe. You can see the database design at https://dbdiagram.io/d/5e24a71a9e76504e0ef06cf2 "
+  version: "1.0.0"
+  title: "Resala Bot API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "aaahussein@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "resala.org.bot" #To be changed
+basePath: "/v1"
+tags:
+- name: "management"
+  description: "Endpoints for managing the bot"
+- name: "bot"
+  description: "Represents a ChatFuel bot (initially there will be only one bot: Salaheldin)"
+- name: "member"
+  description: "Represents a Resala member that is regestired in one or more bots"
+- name: "contribution"
+  description: "Represents a (مشاركة) in an activity"
+- name: "Report"
+  description: "reports about members and contributions of a bot"
+schemes:
+- "https"
+- "http"
+consumes:
+      - "application/json"
+produces:
+      - "application/json"
+paths:
+  /resAdminLogin:
+    get:
+      tags:
+      - "management"
+      summary: "Form for login of admin"
+      responses:
+        200:
+          description: "return the HTML form for admin login"
+  /branch:
+    get:
+      tags:
+      - "management"
+      summary: "Return HTML list of available Resala branches"
+      responses:
+        200:
+          description: "Return HTML list of available Resala branches"
+  /branch/add:
+    get:
+      tags:
+      - "management"
+      summary: "Form for adding a new Resala Branch"
+      responses:
+        200:
+          description: "return the HTML form for adding a new Resala branch"
+  /activity:
+    get:
+      tags:
+      - "management"
+      summary: "Return HTML list of available Resala activities (i.e: قوافل داخلية)"
+      responses:
+        200:
+          description: "Return HTML list of available Resala branches"
+  /activity/add:
+    get:
+      tags:
+      - "management"
+      summary: "Form for adding a new Resala Activity"
+      responses:
+        200:
+          description: "return the HTML form for adding a new Resala activity"
+  /committee:
+    get:
+      tags:
+      - "management"
+      summary: "Return HTML list of available Resala branches committees for a certain activity"
+      parameters:
+      - in: "query"
+        name: "activity_id"
+        description: "The activity id for which to get the associated committees"
+        required: true
+        type: integer
+      responses:
+        200:
+          description: "Return HTML list of available Resala committees for a certain activity"
+  /committee/add:
+    get:
+      tags:
+      - "management"
+      summary: "Form for adding a new Resala Committee for a certain activity"
+      responses:
+        200:
+          description: "return the HTML form for adding a new Resala Committee for a certain activity"
+  /contributionType:
+    get:
+      tags:
+      - "management"
+      summary: "Return HTML list of available contribution types (i.e: الفرع، الخارج)"
+      responses:
+        200:
+          description: "Return HTML list of available contribution types (i.e: الفرع، الخارج)"
+  /contributionType/add:
+    get:
+      tags:
+      - "management"
+      summary: "Form for adding a new contribution type"
+      responses:
+        200:
+          description: "return the HTML form for adding a new contribution type"
+  /memberRole:
+    get:
+      tags:
+      - "management"
+      summary: "Return HTML list of available member roles (i.e: مسؤول، تيم ليدر) "
+      responses:
+        200:
+          description: "Return HTML list of available member roles"
+  /memberRole/add:
+    get:
+      tags:
+      - "management"
+      summary: "Form for adding a new member role"
+      responses:
+        200:
+          description: "return the HTML form for adding a new member role"
+  /home:
+    get:  
+      tags:
+      - "management"
+      summary: "return the current time and if the admin is logged in"
+      responses:
+        200:
+          description: "get the current date time according to Cairo timezone UTC+2"
+          schema:
+            type: "string"
+  
+  /bot/add_bot:
+    get:
+      tags:
+      - "bot"
+      summary: "Form for adding a new member bot"
+      responses:
+        200:
+          description: "return the HTML form for adding a new member bot"
+  /bot:
+    get:
+      tags:
+      - "bot"
+      summary: "get names of all stored bots"
+      responses:
+        200:
+          description: "get names of all stored bots"
+  /bot/{bot_id}:
+    get:
+      tags:
+      - "bot"
+      summary: "get details of the bot with bot_id"
+      parameters:
+      - in: "path"
+        name: "bot_id"
+        type: "string"
+        format: "uuid"
+        required: true
+      responses:
+        200:
+          description: "get details of the bot with bot_id"
+      
+      
+  /bot/{bot_id}/member:
+    post:
+      tags:
+      - "member"
+      summary: "add a new member to the bot with supplied bot_id"
+      parameters:
+      - name: "bot_id"
+        in: "path"
+        description: "The token of the bot you want to add a member to it"
+        required: true
+        type: "string"
+        format: "uuid"
+      - name: "member"
+        in: "body"
+        schema:
+          $ref: "#/definitions/Member"
+      responses:
+        201:
+          description: "Added successfully"
+        400:
+          description: "Missing required data "
+        404:
+          description: "Bot not found"
+        409:
+          description: "Member is already linked to this bot"
+  
+    
+  /bot/{bot_id}/member/{phone}:
+    get:
+      tags:
+      - "member"
+      summary: "gets the data of the specified member with that phone number"
+      parameters:
+      - in: "path"
+        name: "bot_id"
+        description: "The bot_id for the bot that this member belongs to"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "path"
+        name: "phone"
+        required: true
+        description: "The member phone of the member that we request his data"
+        type: "string"
+      responses:
+        200:
+          description: "return the information of the member"
+          schema:
+            $ref: "#/definitions/Member"
+        404:
+          description: "member not found"
+    put:
+      tags:
+      - "member"
+      summary: "edit the data of a member"
+      parameters:
+      - in: "path"
+        name: "bot_id"
+        description: "the bot_id of the member that the member belongs to"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "path"
+        name: "phone"
+        required: true
+        description: "The member phone of the member that we request to update his data"
+        type: "string"
+      - in: "body"
+        name: "member"
+        description: "the new data of the member that will update the old data"
+        required: true
+        schema:
+          $ref: "#/definitions/Member"
+      responses:
+        200:
+          description: "Member updated successfully"
+        400:
+          description: "Missing or invalid required member data"
+        404:
+          description: "Member not found"
+    delete:
+      tags:
+      - "member"
+      summary: "delete this member from this bot (note that the member can be still in other bots)"
+      parameters:
+      - in: "path"
+        name: "bot_id"
+        description: "the bot_id of the member that the member belongs to"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "path"
+        name: "phone"
+        required: true
+        description: "The member phone of the member that we request his data"
+        type: "string"
+      responses:
+        200:
+          description: "Member deleted successfully"
+        404:
+          description: "Member not found"
+  /bot/{bot_id}/member/{phone}/contribution:
+    post:
+      tags:
+      - "contribution"
+      summary: "add a new contribution to by this member belonging to this bot"
+      parameters:
+      - name: "bot_id"
+        in: "path"
+        description: "The id of the bot you want to add a member to it"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "path"
+        name: "phone"
+        description: "The phone of the member that we want to add a contribution to him"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "contribution"
+        schema:
+          $ref: "#/definitions/Contribution"
+      responses:
+        201:
+          description: "Added successfully"
+        400:
+          description: "Missing required data "
+        404:
+          description: "Bot or member not found"
+    get:
+        tags:
+        - "contribution"
+        summary: "get all contributions of that member in a given time range defined by start_date and end_date"
+        parameters:
+        - name: "bot_id"
+          in: "path"
+          description: "The id of the bot you want to add a member to it"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "path"
+          name: "phone"
+          description: "The phone of the member that we want to get his contributions"
+          required: true
+          type: "string"
+        - in: "query"
+          name: "start_date"
+          type: "string"
+          format: "date"
+        - in: "query"
+          name: "end_date"
+          type: "string"
+          format: "date"
+        responses:
+          200:
+            description: "get all contributions whose date falls between startDate(inclusive) and endDate(inclusive)"
+            schema:
+              type: "array"
+              items:
+                $ref: "#/definitions/Contribution"
+          404:
+            description: "Bot or member not found"
+  
+  /bot/{bot_id}/report/members_contributions:
+    get:
+      tags:
+      - "Report"
+      summary: "Get the number of contributions of the members of this bot between start_date and end_date"
+      parameters:
+      - in: "path"
+        name: "bot_id"
+        type: "string"
+        format: "uuid"
+        required: true
+      - in: "query"
+        name: "start_date"
+        type: "string"
+      - in: "query"
+        name: "end_date"
+        type: "string"
+      - in: "query"
+        name: "sort_by"
+        type: "string"
+      responses:
+        200:
+          description: "Return HTML report of the users in that bot with every user showing the number of contributions of each type in the given date interval"
+      
+definitions:
+  Bot:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      url:
+        type: "string"
+      activity:
+        type: "string"
+    xml:
+      name: "Bot"
+    required:
+    - "name"
+    - "activity"
+  Member:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      phone:
+        type: "string"
+        minLength: 7
+        maxLength: 15
+      name:
+        type: "string"
+      branch:
+        type: "string"
+      committee:
+        type: "string"
+      role:
+        type: "string"
+      gender:
+        type: "string"
+        enum: 
+          - "M"
+          - "F"
+      national_number:
+        type: "string"
+        pattern: '\d{14}'
+      messenger_id:
+        type: "string"
+    xml:
+      name: "Member"
+    required:
+      - "phone"
+      - "name"
+      - "branch"
+      - "committee"
+  Contribution:
+    type: "object"
+    properties:
+      contribution_type:
+        type: "string"
+      date:
+        type: "string"
+      details:
+        type: "string"
+      amount_money:
+        type: "integer"
+        format: "int64"
+      did_receive_money:
+        type: "boolean"
+    required:
+      - "contribution_type"
+    xml:
+      name: "Contribution"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

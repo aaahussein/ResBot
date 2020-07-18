@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resala Bot Login</title>
+</head>
+<body>
+<form method="POST" action="">
+    {{form.hidden_tag() }}
+    <div>
+        <fieldset >
+            <div>
+                {{ form.userName.label() }}
+                {{form.userName() }}
+                {% if form.userName.errors %}
+                    {% for error in form.userName.errors %}
+                        <span>{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div>
+                {{ form.password.label() }}
+                {{form.password() }}
+                {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                        <span>{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </fieldset>
+    </div>
+    {{form.submit() }}
+
+</form>
+</body>
+</html>

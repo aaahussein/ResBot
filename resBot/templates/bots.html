@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bots</title>
+</head>
+<body>
+{%if bots %}
+    {%for bot in bots%}
+        <ul>
+            <li><span>{{bot.name}}</span>
+                <span> <a href="{{url_for('show_bot', bot_id=bot.id)}}"> Show Details </a> </span>
+            </li>
+        </ul>
+    {% endfor %}
+{% endif %}
+</body>
+</html>

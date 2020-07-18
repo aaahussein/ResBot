@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Member_contributions_report</title>
+</head>
+<body>
+{% if start_date %}
+<div> Start_date: <span>{{start_date.strftime("%d-%m-%Y")}}</span> </div>
+{% endif %}
+{% if end_date %}
+<div> End_date: <span>{{end_date.strftime("%d-%m-%Y")}}</span> </div>
+{% endif %}
+{% if contributions_df %}
+{{contributions_df|safe}}
+{% endif %}
+</body>
+</html>
