@@ -9,7 +9,8 @@
     {%for bot in bots%}
         <ul>
             <li><span>{{bot.name}}</span>
-                <span> <a href="{{url_for('show_bot', bot_id=bot.id)}}"> Show Details </a> </span>
+                <span style="margin:10px;"> <a href="{{url_for('show_bot', bot_id=bot.id)}}"> Show Details </a> </span>
+                 <span style="margin:10px;"> <a href="{{url_for('get_member_contributions_report', bot_id=bot.id)}}"> Contributions report </a> </span>
             </li>
         </ul>
     {% endfor %}

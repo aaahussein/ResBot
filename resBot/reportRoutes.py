@@ -8,18 +8,19 @@ import datetime
 def get_member_contribution_df(bot_id:str, start_date:datetime.datetime=None,
                                end_date:datetime.datetime=None) ->pd.DataFrame:
     count_label = 'count_label'
-    query = db.session.query(Member.phone, ContributionType.name,
-                             func.count(ContributionType.id).label(count_label)).\
+    contribution_type_label = "contribution_type"
+    query = db.session.query(Member.phone, ContributionType.name.label(contribution_type_label),
+                             Member.name, func.count(ContributionType.id).label(count_label)).\
         filter(Member.bot_id == bot_id).\
         filter(and_(Member.id == Contribution.member_id,
                     Contribution.contribution_type_id == ContributionType.id)).\
-        group_by(Member.phone, ContributionType.id)
+        group_by(Member.phone, Member.name, ContributionType.id)
     if start_date:
         query = query.filter(Contribution.date >= start_date)
     if end_date:
         query = query.filter(Contribution.date <= end_date)
     df = pd.read_sql(query.statement, query.session.bind)
-    df = df.pivot(index=Member.phone.key, columns=ContributionType.name.key,
+    df = df.pivot_table(index=[Member.phone.key, Member.name.key], columns=contribution_type_label,
                   values=count_label).fillna(value=0)
     df["total"] = df.sum(axis=1)
     return df
